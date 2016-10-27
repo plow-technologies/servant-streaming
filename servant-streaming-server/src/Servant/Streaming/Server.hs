@@ -3,12 +3,16 @@ module Servant.Streaming.Server where
 
 import           Control.Monad.IO.Class
 import qualified Data.ByteString                            as BS
+import           Data.Maybe                                 (fromMaybe)
 import qualified Network.HTTP.Media                         as M
+import           Network.HTTP.Types                         (hContentType)
 import           Network.Wai                                (Request,
-                                                             requestBody)
+                                                             requestBody,
+                                                             requestHeaders)
 import           Servant
 import           Servant.Server.Internal.RoutingApplication (DelayedIO,
                                                              addBodyCheck,
+                                                             delayedFailFatal,
                                                              withRequest)
 import           Servant.Streaming
 import           Streaming
@@ -24,14 +28,14 @@ instance HasServer subapi ctx => HasServer (StreamBody contentTypes :> subapi) c
       where
         getContentType :: DelayedIO M.MediaType
         getContentType = withRequest $ \request -> do
-          contentTypeBS <- lookup hContentType $ requestHeaders request
-          contentTypeHdr <- parseAccept contentTypeBS
-          if contentTypeH `isElem` contentTypeList
-            then
-          case mrqbody of
-            Nothing        -> delayedFailFatal err415
-            Just (Left e)  -> delayedFailFatal err400 { errBody = cs e }
-            Just (Right v) -> return v
+          let contentTypeHdr
+               = fromMaybe ("application" M.// "octet-stream")
+               $ lookup hContentType (requestHeaders request) >>= M.parseAccept
+          if contentTypeHdr `elem` contentTypeList
+            then return contentTypeHdr else delayedFailFatal err415
+
+        contentTypeList :: [M.MediaType]
+        contentTypeList = _
 
         makeBody :: MonadIO m => DelayedIO (Stream (Of BS.ByteString) m ())
         makeBody = withRequest $ return . sourceRequestBody
