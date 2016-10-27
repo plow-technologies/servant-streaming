@@ -28,6 +28,7 @@ library
   build-depends:
       base >= 4.7 && < 4.10
     , bytestring
+    , servant
     , servant-server >= 0.8 && < 0.10
     , servant-streaming < 0.2
     , streaming >= 0.1 && < 0.2
@@ -36,6 +37,7 @@ library
     , http-types >= 0.9 && < 0.10
   exposed-modules:
       Servant.Streaming.Server
+      Servant.Streaming.Server.Internal
   default-language: Haskell2010
 
 test-suite doctest
@@ -48,6 +50,7 @@ test-suite doctest
   build-depends:
       base >= 4.7 && < 4.10
     , bytestring
+    , servant
     , servant-server >= 0.8 && < 0.10
     , servant-streaming < 0.2
     , streaming >= 0.1 && < 0.2
@@ -72,6 +75,7 @@ test-suite spec
   build-depends:
       base >= 4.7 && < 4.10
     , bytestring
+    , servant
     , servant-server >= 0.8 && < 0.10
     , servant-streaming < 0.2
     , streaming >= 0.1 && < 0.2

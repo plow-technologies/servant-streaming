@@ -16,6 +16,7 @@ ghc-options: -Wall
 dependencies:
   - base >= 4.7 && < 4.10
   - bytestring
+  - servant
   - servant-server >= 0.8 && < 0.10
   - servant-streaming < 0.2
   - streaming >= 0.1 && < 0.2

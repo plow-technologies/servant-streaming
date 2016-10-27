@@ -1,5 +1,7 @@
 module Servant.StreamingSpec (spec) where
 
+import Servant
+import Servant.Streaming.Server
 import Test.Hspec
 
 spec :: Spec
@@ -24,4 +26,4 @@ streamResponseSpec = describe "StreamResponse instance" $ do
 ------------------------------------------------------------------------------
 -- API
 
-type API = StreamBody '[JSON] :> StreamResponse GET 200 '[JSON]
+type API = StreamBody '[JSON] :> StreamResponseGet '[JSON]
