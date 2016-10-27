@@ -4,16 +4,18 @@ import Servant
 import Servant.Streaming.Server
 import Test.Hspec
 
+import Network.Wai.Handler.Warp
+
 spec :: Spec
 spec = do
   streamBodySpec
 
 streamBodySpec :: Spec
-streamBodySpec = describe "StreamBody instance" $ do
+streamBodySpec = describe "StreamBody instance" $ around withServer $ do
 
-  it "streams the request body" pending
-  it "passes as argument the content-type" pending
-  it "responds with '415 - Unsupported Media Type' on wrong content type" pending
+  it "streams the request body" $ \port -> pending
+  it "passes as argument the content-type" $ \port -> pending
+  it "responds with '415 - Unsupported Media Type' on wrong content type" $ \port -> pending
 
 streamResponseSpec :: Spec
 streamResponseSpec = describe "StreamResponse instance" $ do
@@ -27,3 +29,12 @@ streamResponseSpec = describe "StreamResponse instance" $ do
 -- API
 
 type API = StreamBody '[JSON] :> StreamResponseGet '[JSON]
+
+api :: Proxy API
+api = Proxy
+
+server :: Server API
+server contentType stream = _
+
+withServer :: (Port -> IO ()) -> IO ()
+withServer = testWithApplication (return $ serve api server)

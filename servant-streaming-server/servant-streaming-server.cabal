@@ -85,6 +85,7 @@ test-suite spec
     , servant-streaming-server
     , hspec > 2 && < 3
     , QuickCheck >= 2.8 && < 2.9
+    , warp >= 3.2.4 && < 3.3
   other-modules:
       Doctest
       Servant.StreamingSpec
