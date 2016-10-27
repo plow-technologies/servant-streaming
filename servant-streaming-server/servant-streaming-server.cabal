@@ -4,9 +4,10 @@
 
 name:           servant-streaming-server
 version:        0.1.0.0
-description:    Please see README.md
-homepage:       http://github.com/jkarni/servant-streaming-server#readme
-bug-reports:    https://github.com/jkarni/servant-streaming-server/issues
+synopsis:       Server instances for the 'servant-streaming' package.
+description:    This package defines instances that allow using the 'StreamBody' and 'StreamResponse' combinators in 'servant' servers.
+homepage:       http://github.com/plow-technologies/servant-streaming-server#readme
+bug-reports:    https://github.com/plow-technologies/servant-streaming-server/issues
 author:         Julian K. Arni
 maintainer:     jkarni@gmail.com
 copyright:      (c) Julian K. Arni
@@ -18,7 +19,7 @@ cabal-version:  >= 1.10
 
 source-repository head
   type: git
-  location: https://github.com/jkarni/servant-streaming-server
+  location: https://github.com/plow-technologies/servant-streaming-server
 
 library
   hs-source-dirs:

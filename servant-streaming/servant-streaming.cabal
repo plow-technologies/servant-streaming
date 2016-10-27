@@ -4,9 +4,10 @@
 
 name:           servant-streaming
 version:        0.1.0.0
-description:    Please see README.md
-homepage:       http://github.com/jkarni/servant-streaming#readme
-bug-reports:    https://github.com/jkarni/servant-streaming/issues
+synopsis:       Servant combinators for the 'streaming' package
+description:    This package defines the 'StreamBody' and 'StreamResponse' combinators for use with the <https://hackage.haskell.org/package/streaming streaming> package.
+homepage:       http://github.com/plow-technologies/servant-streaming#readme
+bug-reports:    https://github.com/plow-technologies/servant-streaming/issues
 author:         Julian K. Arni
 maintainer:     jkarni@gmail.com
 copyright:      (c) Julian K. Arni
@@ -18,7 +19,7 @@ cabal-version:  >= 1.10
 
 source-repository head
   type: git
-  location: https://github.com/jkarni/servant-streaming
+  location: https://github.com/plow-technologies/servant-streaming
 
 library
   hs-source-dirs:
