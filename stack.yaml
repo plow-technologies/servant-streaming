@@ -1,0 +1,7 @@
+resolver: lts-7.5
+packages:
+- servant-streaming/
+- servant-streaming-server/
+extra-deps: []
+flags: {}
+extra-package-dbs: []
