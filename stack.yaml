@@ -2,6 +2,7 @@ resolver: lts-7.5
 packages:
 - servant-streaming/
 - servant-streaming-server/
-extra-deps: []
+extra-deps:
+- streaming-wai-0.1.1
 flags: {}
 extra-package-dbs: []

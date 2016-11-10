@@ -33,6 +33,7 @@ library
     , servant-server >= 0.8 && < 0.10
     , servant-streaming < 0.2
     , streaming >= 0.1 && < 0.2
+    , streaming-wai >= 0.1 && < 0.2
     , wai >= 3.0 && < 3.3
     , http-media >= 0.6 && < 0.7
     , http-types >= 0.9 && < 0.10
@@ -55,6 +56,7 @@ test-suite doctest
     , servant-server >= 0.8 && < 0.10
     , servant-streaming < 0.2
     , streaming >= 0.1 && < 0.2
+    , streaming-wai >= 0.1 && < 0.2
     , wai >= 3.0 && < 3.3
     , http-media >= 0.6 && < 0.7
     , http-types >= 0.9 && < 0.10
@@ -72,7 +74,7 @@ test-suite spec
   hs-source-dirs:
       test
   default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes ScopedTypeVariables TypeFamilies TypeOperators
-  ghc-options: -Wall
+  ghc-options: -Wall -with-rtsopts=-T
   build-depends:
       base >= 4.7 && < 4.10
     , bytestring
@@ -80,12 +82,16 @@ test-suite spec
     , servant-server >= 0.8 && < 0.10
     , servant-streaming < 0.2
     , streaming >= 0.1 && < 0.2
+    , streaming-wai >= 0.1 && < 0.2
     , wai >= 3.0 && < 3.3
     , http-media >= 0.6 && < 0.7
     , http-types >= 0.9 && < 0.10
     , servant-streaming-server
     , hspec > 2 && < 3
     , QuickCheck >= 2.8 && < 2.9
+    , pipes >= 4 && < 5
+    , pipes-http >= 1 && < 2
+    , streaming-bytestring >= 0.1 && < 0.2
     , warp >= 3.2.4 && < 3.3
   other-modules:
       Doctest

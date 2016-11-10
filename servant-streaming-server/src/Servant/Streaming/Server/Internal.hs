@@ -4,25 +4,30 @@ module Servant.Streaming.Server.Internal where
 import           Control.Monad.IO.Class
 import qualified Data.ByteString                            as BS
 import           Data.Maybe                                 (fromMaybe)
+import           GHC.TypeLits                               (KnownNat, natVal)
 import qualified Network.HTTP.Media                         as M
-import           Network.HTTP.Types                         (hContentType)
-import           Network.Wai                                (Request,
-                                                             requestBody,
+import           Network.HTTP.Types                         ( Status,
+                                                             hContentType)
+import           Network.Wai                                (Response,
                                                              requestHeaders)
+import           Network.Wai.Streaming                      (streamingRequest,
+                                                             streamingResponse)
 import           Servant
 import           Servant.API.ContentTypes                   (AllMime (allMime))
+import           Servant.Server.Internal.Router             (leafRouter)
 import           Servant.Server.Internal.RoutingApplication (DelayedIO,
+                                                             RouteResult (Route),
                                                              addBodyCheck,
                                                              delayedFailFatal,
+                                                             runAction,
                                                              withRequest)
 import           Servant.Streaming
 import           Streaming
-import qualified Streaming.Prelude                          as S
 
 instance ( AllMime contentTypes, HasServer subapi ctx
          ) => HasServer (StreamBody contentTypes :> subapi) ctx where
   type ServerT (StreamBody contentTypes :> subapi) m
-    = M.MediaType -> Stream (Of BS.ByteString) m () -> ServerT subapi m
+    = M.MediaType -> Stream (Of BS.ByteString) (ResourceT IO) () -> ServerT subapi m
 
   route _ ctxt subapi =
     route (Proxy :: Proxy subapi) ctxt
@@ -40,19 +45,20 @@ instance ( AllMime contentTypes, HasServer subapi ctx
         contentTypeList = allMime (Proxy :: Proxy contentTypes)
 
         makeBody :: MonadIO m => DelayedIO (Stream (Of BS.ByteString) m ())
-        makeBody = withRequest $ return . sourceRequestBody
+        makeBody = withRequest $ return . streamingRequest
 
-        sourceRequestBody :: MonadIO m => Request -> Stream (Of BS.ByteString) m ()
-        sourceRequestBody req = S.untilRight go
-          where
-            go = do
-              bs <- liftIO (requestBody req)
-              return $ if (BS.null bs) then Left bs else Right ()
 
-{-
-instance HasServer (StreamResponse method status ctyp) ctx where
-  type ServerT (StreamBody :> subapi) m = Stream (Of BS.ByteString) m ()
+instance
+  (KnownNat status) => HasServer (StreamResponse method status contentTypes) ctx where
+  type ServerT (StreamResponse method status contentTypes) m
+    = m (Stream (Of BS.ByteString) (ResourceT IO) ())
 
-  route _ ctxt subapi =
-    route (Proxy :: Proxy subapi) _
-    -}
+  route _ ctxt subapi = leafRouter $ \env request respond ->
+    runAction subapi env request respond streamIt
+    where
+
+      streamIt :: Stream (Of BS.ByteString) (ResourceT IO) () -> RouteResult Response
+      streamIt stream = Route $ streamingResponse (hoist runResourceT stream) status []
+
+      status :: Status
+      status = toEnum $ fromInteger $ natVal (Proxy :: Proxy status)
