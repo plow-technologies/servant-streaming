@@ -3,16 +3,19 @@
 module Servant.StreamingSpec (spec) where
 
 import           Data.ByteString           (ByteString)
-import qualified Data.ByteString.Streaming as BSS
+import qualified Data.ByteString.Streaming.Char8 as BSS
 import           Data.String               (fromString)
 import           GHC.Stats
 import qualified Network.HTTP.Media        as M
 import qualified Pipes                     as Pipes
-import           Pipes.HTTP                (defaultManagerSettings,
-                                            defaultRequest,
-                                            managerModifyRequest, method, port,
-                                            requestBody, requestHeaders,
-                                            responseBody, withHTTP, withManager)
+import           Pipes.HTTP                (ManagerSettings, Request,
+                                            RequestBody, defaultManagerSettings,
+                                            defaultRequest, responseTimeout,
+                                            managerModifyRequest, method, path,
+                                            port, requestBody, requestHeaders,
+                                            responseBody, stream, withHTTP,
+                                            withManager)
+import qualified Pipes.Prelude             as Pipes
 import           Servant
 import           Servant.Streaming.Server
 import           Streaming
@@ -24,27 +27,21 @@ import Network.Wai.Handler.Warp
 
 spec :: Spec
 spec = do
-  jointSpec
   streamBodySpec
   streamResponseSpec
 
-jointSpec :: Spec
-jointSpec = describe "StreamBody/StreamResponse" $ around withServer $ do
+streamBodySpec :: Spec
+streamBodySpec = describe "StreamBody instance" $ around withServer $ do
 
   it "streams the request body" $ \port -> do
-    makeRequest port (S.each ["hi"]) $ \responseStream -> do
-      print port
-      threadDelay 100000000
-      runResourceT (S.toList_ responseStream) `shouldReturn` ["hi"]
+    makeRequest port "length" (S.each ["hi"]) $ \responseStream -> do
+      runResourceT (S.toList_ responseStream) `shouldReturn` ["2"]
 
   it "does not keep the request in memory" $ \port -> do
-    makeRequest port (getBytes gigabyte) $ \responseStream -> do
+    makeRequest port "length" (getBytes $ 100) $ \responseStream -> do
       throwOut responseStream
       bytes <- maxBytesUsed <$> getGCStats
       bytes < 10 * megabyte `shouldBe` True
-
-streamBodySpec :: Spec
-streamBodySpec = describe "StreamBody instance" $ around withServer $ do
 
   it "passes as argument the content-type" $ \_port -> pending
   it "responds with '415 - Unsupported Media Type' on wrong content type" $ \_port -> pending
@@ -71,13 +68,15 @@ api = Proxy
 server :: Server API
 server = randomH :<|> lengthH :<|> contentTypeH :<|> echoH
   where
-    randomH                          = return $ getBytes gigabyte
+    randomH                          = return $ getBytes $ 10 * megabyte
     lengthH      _contentType stream = liftIO . runResourceT $ S.length_ stream
     contentTypeH contentType _stream = return contentType
     echoH        _contentType stream = return stream
 
 withServer :: (Port -> IO ()) -> IO ()
-withServer = testWithApplication (return $ serve api server)
+withServer = testWithApplicationSettings settings (return $ serve api server)
+  where
+    settings = setTimeout 1000 defaultSettings
 
 ------------------------------------------------------------------------------
 -- Utils
@@ -90,26 +89,33 @@ getBytes :: Int -> Stream (Of ByteString) (ResourceT IO) ()
 getBytes bytes = S.take bytes $ BSS.toChunks $ BSS.readFile "/dev/urandom"
 
 makeRequest :: Port
+            -> ByteString
             -> Stream (Of ByteString) (ResourceT IO) ()
             -> (Stream (Of ByteString) (ResourceT IO) () -> IO r)
             -> IO r
-makeRequest appPort requestStream responseAction
+makeRequest appPort urlPath requestStream responseAction
   = withManager settings $ \manager ->
      withHTTP req manager $ \respPipe -> do
        responseAction (hoist liftIO $ S.unfoldr Pipes.next $ responseBody respPipe)
   where
+    reqBody :: RequestBody
+    reqBody = stream $ Pipes.unfoldr S.next $ hoist runResourceT requestStream
+
+    req :: Request
     req = defaultRequest { port = appPort
                          , requestHeaders = [("Content-Type", "application/json")]
                          , method = "POST"
+                         , path = urlPath
+                         , requestBody = reqBody
+                         , responseTimeout = Nothing
                          }
-    settings = defaultManagerSettings {
-        managerModifyRequest = \req -> print req >> return req }
+
+    settings :: ManagerSettings
+    settings = defaultManagerSettings
+
 
 instance Show a => MimeRender PlainText a where
   mimeRender _ = fromString . show
-
-gigabyte :: Num a => a
-gigabyte = 1000 ^ 3
 
 megabyte :: Num a => a
 megabyte = 1000 ^ 2
