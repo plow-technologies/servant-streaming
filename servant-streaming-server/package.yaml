@@ -11,20 +11,21 @@ author:              Julian K. Arni
 maintainer:          jkarni@gmail.com
 copyright:           (c) Julian K. Arni
 github:              plow-technologies/servant-streaming-server
-tested-with:         GHC == 7.10.2, GHC == 8.0.1
+tested-with:         GHC == 8.2.2
 
 ghc-options: -Wall
 
 dependencies:
-  - base >= 4.7 && < 4.10
+  - base >= 4.7 && < 4.11
   - bytestring
+  - resourcet >= 1.1 && < 1.2
   - servant
-  - servant-server >= 0.8 && < 0.10
+  - servant-server >= 0.8 && < 0.14
   - servant-streaming < 0.2
-  - streaming >= 0.1 && < 0.2
+  - streaming >= 0.1 && < 0.3
   - streaming-wai >= 0.1 && < 0.2
   - wai >= 3.0 && < 3.3
-  - http-media >= 0.6 && < 0.7
+  - http-media >= 0.6 && < 0.8
   - http-types >= 0.9 && < 0.10
 
 default-extensions:
@@ -60,16 +61,8 @@ tests:
     dependencies:
       - servant-streaming-server
       - hspec > 2 && < 3
-      - QuickCheck >= 2.8 && < 2.9
+      - QuickCheck >= 2.8 && < 2.11
       - pipes >= 4 && < 5
       - pipes-http >= 1 && < 2
       - streaming-bytestring >= 0.1 && < 0.2
       - warp >= 3.2.4 && < 3.3
-  doctest:
-    main:            Doctest.hs
-    source-dirs:     test
-    dependencies:
-      - doctest >= 0.9 && < 0.12
-      - Glob >= 0.7 && < 0.8
-      - yaml == 0.8.*
-

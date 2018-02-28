@@ -12,14 +12,14 @@ author:              Julian K. Arni
 maintainer:          jkarni@gmail.com
 copyright:           (c) Julian K. Arni
 github:              plow-technologies/servant-streaming
-tested-with:         GHC == 7.10.2, GHC == 8.0.1
+tested-with:         GHC == 8.2.2
 
 ghc-options: -Wall
 
 dependencies:
-  - base >= 4.7 && < 4.10
+  - base >= 4.7 && < 4.11
   - http-types >= 0.9 && < 0.10
-  - servant >= 0.8 && < 0.10
+  - servant >= 0.8 && < 0.14
 
 default-extensions:
   - AutoDeriveTypeable
@@ -53,12 +53,4 @@ tests:
     dependencies:
       - servant-streaming
       - hspec > 2 && < 3
-      - QuickCheck >= 2.8 && < 2.9
-  doctest:
-    main:            Doctest.hs
-    source-dirs:     test
-    dependencies:
-      - doctest >= 0.9 && < 0.12
-      - Glob >= 0.7 && < 0.8
-      - yaml == 0.8.*
-
+      - QuickCheck >= 2.8 && < 2.11

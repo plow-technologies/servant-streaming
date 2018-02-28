@@ -1,8 +1,10 @@
-resolver: lts-7.5
+resolver: lts-10.4
 packages:
 - servant-streaming/
 - servant-streaming-server/
 extra-deps:
+- streaming-0.2.0.0
 - streaming-wai-0.1.1
+- pipes-http-1.0.5
 flags: {}
 extra-package-dbs: []
