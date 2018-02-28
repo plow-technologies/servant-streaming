@@ -1,0 +1,56 @@
+name:                servant-streaming-client
+version:             0.1.0.0
+synopsis:            Client instances for the 'servant-streaming' package.
+description:         >
+    This package defines instances that allow using the 'StreamBody' and
+    'StreamResponse' combinators in 'servant' clients.
+homepage:            http://github.com/plow-technologies/servant-streaming#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Julian K. Arni
+maintainer:          jkarni@gmail.com
+copyright:           (c) Julian K. Arni
+github:              plow-technologies/servant-streaming
+tested-with:         GHC == 8.2.2
+
+ghc-options: -Wall
+
+dependencies:
+  - base >= 4.7 && < 4.11
+  - http-types >= 0.9 && < 0.10
+  - servant >= 0.8 && < 0.14
+  - servant-streaming < 0.2
+
+default-extensions:
+  - AutoDeriveTypeable
+  - ConstraintKinds
+  - DataKinds
+  - DefaultSignatures
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveTraversable
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - KindSignatures
+  - MultiParamTypeClasses
+  - OverloadedStrings
+  - RankNTypes
+  - ScopedTypeVariables
+  - TypeFamilies
+  - TypeOperators
+
+library:
+  source-dirs:      src
+  other-modules:    []
+
+tests:
+  spec:
+    main:            Spec.hs
+    source-dirs:     test
+    dependencies:
+      - servant-streaming
+      - hspec > 2 && < 3
+      - QuickCheck >= 2.8 && < 2.11
