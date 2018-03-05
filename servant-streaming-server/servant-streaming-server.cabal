@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9b0ff67e396f911f3835614e3283ce7dab85f7f074ce9986b06a7d728a6c8f3c
+-- hash: 144ad804d40825b77f78bd53518245323b4502f6cd8e6b1d8fe8a94cb4b11f2b
 
 name:           servant-streaming-server
 version:        0.1.0.0
@@ -32,7 +32,7 @@ library
       base >=4.7 && <4.11
     , bytestring
     , http-media >=0.6 && <0.8
-    , http-types >=0.9 && <0.10
+    , http-types >=0.9 && <0.13
     , resourcet >=1.1 && <1.2
     , servant
     , servant-server >=0.8 && <0.14
@@ -58,7 +58,7 @@ test-suite spec
     , bytestring
     , hspec >2 && <3
     , http-media >=0.6 && <0.8
-    , http-types >=0.9 && <0.10
+    , http-types >=0.9 && <0.13
     , pipes >=4 && <5
     , pipes-http >=1 && <2
     , resourcet >=1.1 && <1.2
@@ -72,6 +72,6 @@ test-suite spec
     , wai >=3.0 && <3.3
     , warp >=3.2.4 && <3.3
   other-modules:
-      Servant.StreamingSpec
+      Servant.Streaming.ServerSpec
       Paths_servant_streaming_server
   default-language: Haskell2010

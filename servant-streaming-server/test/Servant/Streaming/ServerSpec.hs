@@ -1,12 +1,11 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
-module Servant.StreamingSpec where
+module Servant.Streaming.ServerSpec (spec) where
 
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import           Data.ByteString              (ByteString)
 import qualified Data.ByteString              as BS
 import qualified Data.ByteString.Lazy         as BSL
-import qualified Data.ByteString.Streaming    as BSS
 import           Data.String                  (fromString)
 import           GHC.Stats
 import qualified Network.HTTP.Media           as M
@@ -90,11 +89,6 @@ withServer = testWithApplicationSettings settings (return $ serve api server)
 
 ------------------------------------------------------------------------------
 -- Utils
-
-throwOut :: Stream (Of ByteString) (ResourceT IO) () -> IO ()
-throwOut
-  = runResourceT . BSS.stdout . BSS.fromChunks
-
 
 makeRequest
   :: Request -> IO (Response BSL.ByteString)
