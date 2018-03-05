@@ -8,7 +8,8 @@ import qualified Data.ByteString                            as BS
 import           Data.Maybe                                 (fromMaybe)
 import           GHC.TypeLits                               (KnownNat, natVal)
 import qualified Network.HTTP.Media                         as M
-import           Network.HTTP.Types                         (Status,
+import           Network.HTTP.Types                         (Method, Status,
+                                                             hAccept,
                                                              hContentType)
 import           Network.Wai                                (Response,
                                                              requestHeaders)
@@ -16,10 +17,15 @@ import           Network.Wai.Streaming                      (streamingRequest,
                                                              streamingResponse)
 import           Servant                                    hiding (Stream)
 import           Servant.API.ContentTypes                   (AllMime (allMime))
+import           Servant.Server.Internal                    (ct_wildcard,
+                                                             methodCheck,
+                                                             acceptCheck)
 import           Servant.Server.Internal.Router             (leafRouter)
 import           Servant.Server.Internal.RoutingApplication (DelayedIO,
                                                              RouteResult (Route),
                                                              addBodyCheck,
+                                                             addMethodCheck,
+                                                             addAcceptCheck,
                                                              delayedFailFatal,
                                                              runAction,
                                                              withRequest)
@@ -54,14 +60,23 @@ instance ( AllMime contentTypes, HasServer subapi ctx
     = hoistServerWithContext (Proxy :: Proxy subapi) a b . c
 
 
-instance ( KnownNat status
+instance ( KnownNat status, AllMime contentTypes, ReflectMethod method
          ) => HasServer (StreamResponse method status contentTypes) ctx where
   type ServerT (StreamResponse method status contentTypes) m
     = m (Stream (Of BS.ByteString) (ResourceT IO) ())
 
   route _ _ctxt subapi = leafRouter $ \env request respond ->
-    runAction subapi env request respond streamIt
+    let action = subapi `addMethodCheck` methodCheck method request
+                        `addAcceptCheck` acceptCheck contentTypeProxy accept
+        accept = fromMaybe ct_wildcard $ lookup hAccept $ requestHeaders request
+    in runAction action env request respond streamIt
     where
+
+      method :: Method
+      method = reflectMethod (Proxy :: Proxy method)
+
+      contentTypeProxy :: Proxy contentTypes
+      contentTypeProxy = Proxy
 
       streamIt :: Stream (Of BS.ByteString) (ResourceT IO) () -> RouteResult Response
       streamIt stream = Route $ streamingResponse (hoist runResourceT stream) status []

@@ -4,16 +4,19 @@ module Servant.Streaming.ClientSpec (spec) where
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import qualified Data.ByteString              as BS
 import qualified Data.ByteString.Char8        as BSC
-import qualified Data.ByteString.Lazy.Char8              as BSCL
-import           Network.HTTP.Client          (newManager, defaultManagerSettings)
+import qualified Data.ByteString.Lazy.Char8   as BSCL
+import           GHC.Stats
+import           Network.HTTP.Client          (defaultManagerSettings,
+                                               newManager)
 import qualified Network.HTTP.Media           as M
 import           Network.Wai.Handler.Warp
 import           Servant                      ((:<|>) ((:<|>)), (:>), JSON,
-                                               MimeRender (..), MimeUnrender (..), PlainText, Post,
-                                               Proxy (..), Server, serve)
+                                               MimeRender (..),
+                                               MimeUnrender (..), PlainText,
+                                               Post, Proxy (..), Server, serve)
 import           Servant.Client
 import           Servant.Streaming.Client
-import           Servant.Streaming.Server ()
+import           Servant.Streaming.Server     ()
 import           Streaming
 import qualified Streaming.Prelude            as S
 import           Test.Hspec
@@ -30,14 +33,12 @@ streamBodySpec = describe "StreamBody instance" $ around withServer $ do
     runClient port' (lengthC ("application" M.// "json", S.each ["h","i"]))
       `shouldReturn` Right 2
 
-  {-it "does not keep the request in memory" $ \port' -> do-}
-    {-let req = streamReq port' "length"-}
-            {-$ S.replicate megabyte-}
-            {-$ BS.replicate 1000 97 -- 1000 MB total-}
-    {-responseBody <$> makeRequest req-}
-      {-`shouldReturn` fromString (show (1000 * megabyte :: Int))-}
-    {-bytes <- max_live_bytes <$> getRTSStats-}
-    {-bytes < 100 * megabyte `shouldBe` True-}
+  it "does not keep the request in memory" $ \port' -> do
+    let bd = S.replicate 1000 (BSC.replicate megabyte 'a') -- 1000 MB total
+    runClient port' (lengthC ("application" M.// "json", bd))
+      `shouldReturn` Right (1000 * megabyte)
+    bytes <- max_live_bytes <$> getRTSStats
+    bytes < 100 * megabyte `shouldBe` True
 
 ------------------------------------------------------------------------------
 -- API
@@ -91,7 +92,7 @@ runClient p action = do
   runClientM action env
 
 megabyte :: Num a => a
-megabyte = 1000 ^ 2
+megabyte = 1000 ^ (2 :: Int)
 
 ------------------------------------------------------------------------------
 -- Orphans

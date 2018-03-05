@@ -4,7 +4,7 @@ module Servant.Streaming.Server
   , StreamResponseGet
   , StreamResponsePost
   , StreamResponsePut
-  , StreamResponseDelete
+  , StreamResponsePatch
   ) where
 
 import Servant.Streaming

@@ -9,7 +9,7 @@ module Servant.Streaming.Client
   , StreamResponseGet
   , StreamResponsePost
   , StreamResponsePut
-  , StreamResponseDelete
+  , StreamResponsePatch
   ) where
 
 import Servant.Streaming

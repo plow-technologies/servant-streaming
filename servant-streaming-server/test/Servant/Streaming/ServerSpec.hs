@@ -9,15 +9,17 @@ import qualified Data.ByteString.Lazy         as BSL
 import           Data.String                  (fromString)
 import           GHC.Stats
 import qualified Network.HTTP.Media           as M
+import           Network.HTTP.Types           (status200, status405, status406,
+                                               status415)
 import           Network.Wai.Handler.Warp
 import qualified Pipes                        as Pipes
-import           Pipes.HTTP                   (Request,
-                                               Response,
+import           Pipes.HTTP                   (Request, Response,
                                                defaultManagerSettings,
                                                defaultRequest, httpLbs, method,
                                                newManager, path, port,
                                                requestBody, requestHeaders,
-                                               responseBody, responseTimeout,
+                                               responseBody, responseStatus,
+                                               responseTimeout,
                                                responseTimeoutNone, stream,
                                                withHTTP)
 import qualified Pipes.Prelude                as Pipes
@@ -51,15 +53,44 @@ streamBodySpec = describe "StreamBody instance" $ around withServer $ do
     bytes <- max_live_bytes <$> getRTSStats
     bytes < 100 * megabyte `shouldBe` True
 
-  it "passes as argument the content-type" $ \_port -> pending
-  it "responds with '415 - Unsupported Media Type' on wrong content type" $ \_port -> pending
+  it "passes as argument the content-type" $ \port' -> do
+    let req = streamReq port' "contentType" (S.each ["h","i"])
+    responseBody <$> makeRequest req `shouldReturn` "application/json"
+
+  it "responds with '415 - Unsupported Media Type' on wrong content type" $ \port' -> do
+    let req' = streamReq port' "length" (S.each ["h","i"])
+        req = req' { requestHeaders = [("Content-Type", "bla/bla")] }
+    responseStatus <$> makeRequest req `shouldReturn` status415
 
 streamResponseSpec :: Spec
 streamResponseSpec = describe "StreamResponse instance" $ around withServer $ do
 
-  it "sets the specified status code" $ \_port -> pending
-  it "responds with '405 - Method Not Allowed' on wrong method" $ \_port -> pending
-  it "responds with '406 - Not Acceptable' on wrong content type" $ \_port -> pending
+  it "streams the response body" $ \port' -> do
+    let req = streamReq port' "echo" (S.each ["h","i"])
+    responseBody <$> makeRequest req `shouldReturn` "hi"
+
+  it "does not keep the response in memory" $ \port' -> do
+    let req = streamReq port' "echo"
+            $ S.replicate megabyte
+            $ BS.replicate 1000 97 -- 1000 MB total
+    responseBody <$> makeRequestStreamResponse req (runResourceT . S.length)
+      `shouldReturn` (1000 * megabyte :> ())
+    bytes <- max_live_bytes <$> getRTSStats
+    bytes < 100 * megabyte `shouldBe` True
+
+  it "sets the specified status code" $ \port' -> do
+    let req = streamReq port' "length" (S.each ["h","i"])
+    responseStatus <$> makeRequest req `shouldReturn` status200
+
+  it "responds with '405 - Method Not Allowed' on wrong method" $ \port' -> do
+    let req' = streamReq port' "echo" (S.each ["h","i"])
+        req = req' { method = "GET" }
+    responseStatus <$> makeRequest req `shouldReturn` status405
+
+  it "responds with '406 - Not Acceptable' on wrong content type" $ \port' -> do
+    let req' = streamReq port' "echo" (S.each ["h","i"])
+        req = req' { requestHeaders = ("Accept", "bla/bla"):requestHeaders req' }
+    responseStatus <$> makeRequest req `shouldReturn` status406
 
 ------------------------------------------------------------------------------
 -- API
