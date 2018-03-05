@@ -3,12 +3,13 @@
 module Servant.Streaming.Client.Internal where
 
 import Control.Monad
-import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
+import           Control.Monad.Trans.Resource (ResourceT, runResourceT, runInternalState, getInternalState)
 import qualified Data.ByteString              as BS
 import           Data.Proxy                   (Proxy (Proxy))
 import qualified Network.HTTP.Media           as M
 import           Servant.API                  hiding (Stream)
 import           Servant.Client.Core
+import Data.IORef
 import           Servant.Streaming
 import           Streaming
 import qualified Streaming.Prelude            as S
@@ -25,12 +26,19 @@ instance (HasClient m subapi, RunClient m )
         req { requestBody = Just (RequestBodyStreamChunked body', mtype) }
     where
       body' :: (IO BS.ByteString -> IO ()) -> IO ()
-      body' write = runResourceT $ mapsM_ (go write) body
-
-      go :: (IO BS.ByteString -> IO ()) -> Of BS.ByteString x -> ResourceT IO x
-      go write (bs :> r) = do
-        liftIO $ write (return bs)
-        return r
+      body' write = runResourceT $ do
+        ref <- liftIO $ newIORef body
+        is <- getInternalState
+        let popper :: IO BS.ByteString
+            popper = do
+              rsrc <- readIORef ref
+              mres <- runInternalState (S.uncons rsrc) is
+              case mres of
+                Nothing -> return BS.empty
+                Just (bs, str)
+                  | BS.null bs -> writeIORef ref str >> popper
+                  | otherwise -> writeIORef ref str >> return bs
+        liftIO $ write popper
 
 instance (RunClient m )
     => HasClient m (StreamResponse verb status contentTypes) where
@@ -38,12 +46,13 @@ instance (RunClient m )
     = m (Stream (Of BS.ByteString) (ResourceT IO) ())
   clientWithRoute pm _ req = do
     respStream <- runStreamingResponse <$> streamingRequest req
-    let stream' = respStream (\x -> responseBody x)
+    let stream' = respStream responseBody
     return $ toStream stream'
     where
       toStream :: IO BS.ByteString -> Stream (Of BS.ByteString) (ResourceT IO) ()
-      toStream read = do
-        bs <- liftIO read
+      toStream read' = do
+        bs <- liftIO read'
+        liftIO $ print bs
         unless (BS.null bs) $ do
           S.yield bs
-          toStream read
+          toStream read'

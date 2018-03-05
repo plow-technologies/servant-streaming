@@ -43,7 +43,7 @@ streamBodySpec = describe "StreamBody instance" $ around withServer $ do
 -- API
 
 type API
-  =    "length" :> StreamBody '[JSON] :> Post '[PlainText] Int
+  =    "length" :> StreamBody '[JSON] :> Post '[JSON] Int
   :<|> "contentType" :> StreamBody '[JSON, PlainText] :> Post '[PlainText] M.MediaType
   :<|> "echo" :> StreamBody '[JSON] :> StreamResponsePost '[JSON]
 
@@ -65,9 +65,15 @@ withServer = testWithApplicationSettings settings (return $ serve api server)
   where
     settings = setTimeout 1000 defaultSettings
 
-lengthC :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ()) -> ClientM Int
-contentTypeC :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ()) -> ClientM M.MediaType
-echoC :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ()) -> ClientM (Stream (Of BS.ByteString) (ResourceT IO) ())
+lengthC
+  :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ())
+  -> ClientM Int
+contentTypeC
+  :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ())
+  -> ClientM M.MediaType
+echoC
+  :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ())
+  -> ClientM (Stream (Of BS.ByteString) (ResourceT IO) ())
 lengthC :<|> contentTypeC :<|> echoC
   = client api
 
@@ -93,9 +99,9 @@ megabyte = 1000 ^ 2
 instance Show a => MimeRender PlainText a where
   mimeRender _ = BSCL.pack . show
 instance Read a => MimeUnrender PlainText a where
-  mimeUnrender _ = read . BSCL.unpack
+  mimeUnrender _ = error . BSCL.unpack
 
 instance Read M.MediaType where
   readsPrec _ x = case M.parseAccept (BSC.pack x) of
-    Nothing -> error "no parse"
+    Nothing -> error $ show x
     Just y -> [(y, "")]
