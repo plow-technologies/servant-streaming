@@ -2,12 +2,12 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9afada8a9c7f61dad3fc07d2b08b476b3c9c5a11eb193bb1d538aa4a043361f8
+-- hash: 2a62cc5a4075fbe8ffec3f880ca2e52aa67abc3562e8a438282c08aeb9f6e105
 
-name:           servant-streaming
+name:           servant-streaming-client
 version:        0.1.0.0
-synopsis:       Servant combinators for the 'streaming' package
-description:    This package defines the 'StreamBody' and 'StreamResponse' combinators for use with the <https://hackage.haskell.org/package/streaming streaming> package.
+synopsis:       Client instances for the 'servant-streaming' package.
+description:    This package defines instances that allow using the 'StreamBody' and 'StreamResponse' combinators in 'servant' clients.
 homepage:       http://github.com/plow-technologies/servant-streaming#readme
 bug-reports:    https://github.com/plow-technologies/servant-streaming/issues
 author:         Julian K. Arni
@@ -30,10 +30,17 @@ library
   ghc-options: -Wall
   build-depends:
       base >=4.7 && <4.11
+    , bytestring
+    , http-media >=0.6 && <0.8
     , http-types >=0.9 && <0.13
-    , servant >=0.8 && <0.14
+    , resourcet >=1.1 && <1.2
+    , servant >=0.10 && <0.14
+    , servant-client-core >=0.10 && <0.14
+    , servant-streaming <0.2
+    , streaming >=0.1 && <0.3
   exposed-modules:
-      Servant.Streaming
+      Servant.Streaming.Client
+      Servant.Streaming.Client.Internal
   default-language: Haskell2010
 
 test-suite spec
@@ -46,10 +53,22 @@ test-suite spec
   build-depends:
       QuickCheck >=2.8 && <2.11
     , base >=4.7 && <4.11
+    , bytestring
     , hspec >2 && <3
+    , http-client
+    , http-media >=0.6 && <0.8
     , http-types >=0.9 && <0.13
-    , servant >=0.8 && <0.14
-    , servant-streaming
+    , resourcet >=1.1 && <1.2
+    , servant >=0.10 && <0.14
+    , servant-client
+    , servant-client-core >=0.10 && <0.14
+    , servant-server
+    , servant-streaming <0.2
+    , servant-streaming-client
+    , servant-streaming-server
+    , streaming >=0.1 && <0.3
+    , warp
   other-modules:
-      Paths_servant_streaming
+      Servant.Streaming.ClientSpec
+      Paths_servant_streaming_client
   default-language: Haskell2010

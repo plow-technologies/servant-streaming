@@ -17,9 +17,15 @@ ghc-options: -Wall
 
 dependencies:
   - base >= 4.7 && < 4.11
-  - http-types >= 0.9 && < 0.10
-  - servant >= 0.8 && < 0.14
+  - http-types >= 0.9 && < 0.13
+  - http-media >= 0.6 && < 0.8
+  - servant >= 0.10 && < 0.14
   - servant-streaming < 0.2
+  - bytestring
+  - servant-client-core >= 0.10 && < 0.14
+  - resourcet >= 1.1 && < 1.2
+  - streaming >= 0.1 && < 0.3
+
 
 default-extensions:
   - AutoDeriveTypeable
@@ -51,6 +57,11 @@ tests:
     main:            Spec.hs
     source-dirs:     test
     dependencies:
-      - servant-streaming
+      - servant-streaming-client
+      - servant-streaming-server
+      - servant-client
+      - servant-server
+      - http-client
+      - warp
       - hspec > 2 && < 3
       - QuickCheck >= 2.8 && < 2.11

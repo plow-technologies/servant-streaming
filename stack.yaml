@@ -1,10 +1,20 @@
-resolver: lts-10.4
+resolver: lts-10.6
 packages:
 - servant-streaming/
 - servant-streaming-server/
+- servant-streaming-client/
 extra-deps:
 - streaming-0.2.0.0
 - streaming-wai-0.1.1
 - pipes-http-1.0.5
+- git: https://github.com/haskell-servant/servant
+  commit: bb49f90ba2815e27f781766a887dca8c1f6d8d89
+  subdirs:
+    - servant-server
+    - servant
+    - servant-client-core
+    - servant-client
+- text-1.2.3.0
+- http-types-0.12.1
 flags: {}
 extra-package-dbs: []
