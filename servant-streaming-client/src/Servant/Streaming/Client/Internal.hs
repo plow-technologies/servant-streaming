@@ -37,9 +37,9 @@ instance (RunClient m )
   type Client m (StreamResponse verb status contentTypes)
     = m (Stream (Of BS.ByteString) (ResourceT IO) ())
   clientWithRoute pm _ req = do
-    resp <- runRequest req
-    case responseBody resp of
-      x -> _ -- return $ toStream $ responseBody resp
+    respStream <- runStreamingResponse <$> streamingRequest req
+    let stream' = respStream (\x -> responseBody x)
+    return $ toStream stream'
     where
       toStream :: IO BS.ByteString -> Stream (Of BS.ByteString) (ResourceT IO) ()
       toStream read = do

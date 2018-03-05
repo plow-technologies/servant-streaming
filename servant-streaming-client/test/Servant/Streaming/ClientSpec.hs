@@ -1,9 +1,10 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Servant.Streaming.ClientSpec (spec) where
 
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import qualified Data.ByteString              as BS
-import           Data.String                  (fromString)
-import           GHC.Stats
+import qualified Data.ByteString.Char8        as BSC
+import qualified Data.ByteString.Lazy.Char8              as BSCL
 import           Network.HTTP.Client          (newManager, defaultManagerSettings)
 import qualified Network.HTTP.Media           as M
 import           Network.Wai.Handler.Warp
@@ -12,7 +13,7 @@ import           Servant                      ((:<|>) ((:<|>)), (:>), JSON,
                                                Proxy (..), Server, serve)
 import           Servant.Client
 import           Servant.Streaming.Client
-import           Servant.Streaming.Server
+import           Servant.Streaming.Server ()
 import           Streaming
 import qualified Streaming.Prelude            as S
 import           Test.Hspec
@@ -64,6 +65,9 @@ withServer = testWithApplicationSettings settings (return $ serve api server)
   where
     settings = setTimeout 1000 defaultSettings
 
+lengthC :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ()) -> ClientM Int
+contentTypeC :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ()) -> ClientM M.MediaType
+echoC :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ()) -> ClientM (Stream (Of BS.ByteString) (ResourceT IO) ())
 lengthC :<|> contentTypeC :<|> echoC
   = client api
 
@@ -87,7 +91,11 @@ megabyte = 1000 ^ 2
 -- Orphans
 
 instance Show a => MimeRender PlainText a where
+  mimeRender _ = BSCL.pack . show
 instance Read a => MimeUnrender PlainText a where
+  mimeUnrender _ = read . BSCL.unpack
 
 instance Read M.MediaType where
-  {-read = M.parseAccept . T.pack-}
+  readsPrec _ x = case M.parseAccept (BSC.pack x) of
+    Nothing -> error "no parse"
+    Just y -> [(y, "")]
