@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f8fe127b8f94b5053170d12b54f28286f530db8faaa0a4c6507290de8a0e54ef
+-- hash: 23fdf0589ae452fc911abfb7854f7dac188a76418c285103e6247a6ff89076f5
 
 name:           servant-streaming-docs
 version:        0.1.0.0
@@ -26,7 +26,7 @@ source-repository head
 library
   hs-source-dirs:
       src
-  default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes ScopedTypeVariables TypeFamilies TypeOperators
+  default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes RecordWildCards ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall
   build-depends:
       base >=4.7 && <4.11

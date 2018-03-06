@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9afada8a9c7f61dad3fc07d2b08b476b3c9c5a11eb193bb1d538aa4a043361f8
+-- hash: d3eccaebab95cbf01d57ac0fccb617d103b8c08a4e2426fced89352c574e670b
 
 name:           servant-streaming
 version:        0.1.0.0
@@ -26,7 +26,7 @@ source-repository head
 library
   hs-source-dirs:
       src
-  default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes ScopedTypeVariables TypeFamilies TypeOperators
+  default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes RecordWildCards ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall
   build-depends:
       base >=4.7 && <4.11
@@ -41,7 +41,7 @@ test-suite spec
   main-is: Spec.hs
   hs-source-dirs:
       test
-  default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes ScopedTypeVariables TypeFamilies TypeOperators
+  default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes RecordWildCards ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall
   build-depends:
       QuickCheck >=2.8 && <2.11

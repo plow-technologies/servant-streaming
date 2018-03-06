@@ -38,6 +38,7 @@ default-extensions:
   - MultiParamTypeClasses
   - OverloadedStrings
   - RankNTypes
+  - RecordWildCards
   - ScopedTypeVariables
   - TypeFamilies
   - TypeOperators
