@@ -57,7 +57,7 @@ tests:
   spec:
     main:            Spec.hs
     source-dirs:     test
-    ghc-options:     -Wall -with-rtsopts=-T
+    ghc-options:     -Wall -with-rtsopts=-T -threaded
     dependencies:
       - servant-streaming-server
       - hspec > 2 && < 3

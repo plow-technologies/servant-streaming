@@ -2,14 +2,15 @@
 
 module Servant.Streaming.Client.Internal where
 
-import Control.Monad
-import           Control.Monad.Trans.Resource (ResourceT, runResourceT, runInternalState, getInternalState)
+import           Control.Monad
+import           Control.Monad.Trans.Resource (ResourceT, getInternalState,
+                                               runInternalState, runResourceT)
 import qualified Data.ByteString              as BS
+import           Data.IORef
 import           Data.Proxy                   (Proxy (Proxy))
 import qualified Network.HTTP.Media           as M
 import           Servant.API                  hiding (Stream)
 import           Servant.Client.Core
-import Data.IORef
 import           Servant.Streaming
 import           Streaming
 import qualified Streaming.Prelude            as S

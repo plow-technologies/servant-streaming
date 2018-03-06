@@ -2,18 +2,21 @@
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
 module Servant.Streaming.ServerSpec (spec) where
 
-import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
+import           Control.Concurrent
+import           Control.Monad.Trans.Resource (ResourceT, getInternalState,
+                                               runInternalState, runResourceT)
 import           Data.ByteString              (ByteString)
 import qualified Data.ByteString              as BS
 import qualified Data.ByteString.Lazy         as BSL
+import           Data.IORef
 import           Data.String                  (fromString)
 import           GHC.Stats
 import qualified Network.HTTP.Media           as M
 import           Network.HTTP.Types           (status200, status405, status406,
                                                status415)
 import           Network.Wai.Handler.Warp
-import qualified Pipes                        as Pipes
-import           Pipes.HTTP                   (Request, Response,
+import           Pipes.HTTP                   (Request, RequestBody (..),
+                                               Response, brRead,
                                                defaultManagerSettings,
                                                defaultRequest, httpLbs, method,
                                                newManager, path, port,
@@ -21,8 +24,7 @@ import           Pipes.HTTP                   (Request, Response,
                                                responseBody, responseStatus,
                                                responseTimeout,
                                                responseTimeoutNone, stream,
-                                               withHTTP)
-import qualified Pipes.Prelude                as Pipes
+                                               withResponse)
 import           Servant                      ((:<|>) ((:<|>)), (:>), JSON,
                                                MimeRender (..), PlainText, Post,
                                                Proxy (..), Server, serve)
@@ -56,6 +58,8 @@ streamBodySpec = describe "StreamBody instance" $ around withServer $ do
   it "passes as argument the content-type" $ \port' -> do
     let req = streamReq port' "contentType" (S.each ["h","i"])
     responseBody <$> makeRequest req `shouldReturn` "application/json"
+    let req' = req { requestHeaders = [("Content-Type", "text/plain;charset=utf-8")] }
+    responseBody <$> makeRequest req' `shouldReturn` "text/plain;charset=utf-8"
 
   it "responds with '415 - Unsupported Media Type' on wrong content type" $ \port' -> do
     let req' = streamReq port' "length" (S.each ["h","i"])
@@ -71,10 +75,9 @@ streamResponseSpec = describe "StreamResponse instance" $ around withServer $ do
 
   it "does not keep the response in memory" $ \port' -> do
     let req = streamReq port' "echo"
-            $ S.replicate megabyte
-            $ BS.replicate 1000 97 -- 1000 MB total
-    responseBody <$> makeRequestStreamResponse req (runResourceT . S.length)
-      `shouldReturn` (1000 * megabyte :> ())
+            $ S.replicate 100
+            $ BS.replicate megabyte 97 -- 100 MB total
+    _ <- makeRequestStreamResponse req (runResourceT . S.length)
     bytes <- max_live_bytes <$> getRTSStats
     bytes < 100 * megabyte `shouldBe` True
 
@@ -114,9 +117,9 @@ server = lengthH :<|> contentTypeH :<|> echoH
       = return stream'
 
 withServer :: (Port -> IO ()) -> IO ()
-withServer = testWithApplicationSettings settings (return $ serve api server)
+withServer = withApplicationSettings settings (return $ serve api server)
   where
-    settings = setTimeout 1000 defaultSettings
+    settings = setTimeout 60 defaultSettings
 
 ------------------------------------------------------------------------------
 -- Utils
@@ -128,13 +131,19 @@ makeRequest req = do
   httpLbs req manager
 
 makeRequestStreamResponse
-  :: Request -> (Stream (Of ByteString) (ResourceT IO) () -> IO r) -> IO (Response r)
+  :: Request -> (Stream (Of ByteString) (ResourceT IO) () -> IO r) -> IO r
 makeRequestStreamResponse req responseAction = do
   manager <- newManager defaultManagerSettings
-  withHTTP req manager $ \respPipe -> sequence $
-    respPipe
-      { responseBody =  responseAction
-          (hoist liftIO $ S.unfoldr Pipes.next $ responseBody respPipe) }
+  withResponse req manager (responseAction . go . responseBody)
+  where
+    go :: MonadIO m => IO BS.ByteString -> Stream (Of ByteString) m ()
+    go respReader = do
+      n <- liftIO $ brRead respReader
+      if BS.null n
+      then return ()
+      else do
+        S.yield n
+        go respReader
 
 streamReq
   :: Port -> ByteString -> Stream (Of ByteString) (ResourceT IO) () -> Request
@@ -147,8 +156,23 @@ streamReq appPort urlPath requestStream = defaultRequest
   , responseTimeout = responseTimeoutNone
   }
   where
-    streamReqBody s
-      = stream $ Pipes.unfoldr S.next $ hoist runResourceT s
+    streamReqBody body
+      = RequestBodyStreamChunked body'
+      where
+        body' :: (IO BS.ByteString -> IO ()) -> IO ()
+        body' write = void . forkIO . runResourceT $ do
+          ref <- liftIO $ newIORef body
+          is <- getInternalState
+          let popper :: IO BS.ByteString
+              popper = do
+                rsrc <- readIORef ref
+                mres <- runInternalState (S.uncons rsrc) is
+                case mres of
+                  Nothing -> return BS.empty
+                  Just (bs, str)
+                    | BS.null bs -> writeIORef ref str >> popper
+                    | otherwise -> writeIORef ref str >> return bs
+          liftIO $ write popper
 
 instance Show a => MimeRender PlainText a where
   mimeRender _ = fromString . show
