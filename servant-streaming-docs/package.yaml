@@ -1,0 +1,49 @@
+name:                servant-streaming-docs
+version:             0.1.0.0
+synopsis:            Client instances for the 'servant-docs' package.
+description:         >
+    This package defines instances that allow using the 'StreamBody' and
+    'StreamResponse' combinators in combination with 'servant-docs'
+homepage:            http://github.com/plow-technologies/servant-streaming#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Julian K. Arni
+maintainer:          jkarni@gmail.com
+copyright:           (c) Julian K. Arni
+github:              plow-technologies/servant-streaming
+tested-with:         GHC == 8.2.2
+
+ghc-options: -Wall
+
+dependencies:
+  - base >= 4.7 && < 4.11
+  - servant >= 0.10 && < 0.14
+  - servant-streaming < 0.2
+  - servant-docs >= 0.10 && < 0.14
+  - lens
+
+
+default-extensions:
+  - AutoDeriveTypeable
+  - ConstraintKinds
+  - DataKinds
+  - DefaultSignatures
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveTraversable
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - KindSignatures
+  - MultiParamTypeClasses
+  - OverloadedStrings
+  - RankNTypes
+  - ScopedTypeVariables
+  - TypeFamilies
+  - TypeOperators
+
+library:
+  source-dirs:      src
+  other-modules:    []

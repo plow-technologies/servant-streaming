@@ -23,7 +23,7 @@ import           Pipes.HTTP                   (Request, RequestBody (..),
                                                requestBody, requestHeaders,
                                                responseBody, responseStatus,
                                                responseTimeout,
-                                               responseTimeoutNone, stream,
+                                               responseTimeoutNone,
                                                withResponse)
 import           Servant                      ((:<|>) ((:<|>)), (:>), JSON,
                                                MimeRender (..), PlainText, Post,

@@ -3,6 +3,7 @@ packages:
 - servant-streaming/
 - servant-streaming-server/
 - servant-streaming-client/
+- servant-streaming-docs/
 extra-deps:
 - streaming-0.2.0.0
 - streaming-wai-0.1.1
@@ -14,6 +15,7 @@ extra-deps:
     - servant
     - servant-client-core
     - servant-client
+    - servant-docs
 - text-1.2.3.0
 - http-types-0.12.1
 flags: {}
