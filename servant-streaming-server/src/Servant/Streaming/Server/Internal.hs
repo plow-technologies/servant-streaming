@@ -1,9 +1,14 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Servant.Streaming.Server.Internal where
 
+import           Control.Exception                          (bracket)
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource               (ResourceT,
-                                                             runResourceT)
+                                                             runResourceT,
+                                                             InternalState,
+                                                             createInternalState,
+                                                             closeInternalState,
+                                                             runInternalState)
 import qualified Data.ByteString                            as BS
 import           Data.Maybe                                 (fromMaybe)
 import           GHC.TypeLits                               (KnownNat, natVal)
@@ -69,17 +74,18 @@ instance ( KnownNat status, AllMime contentTypes, ReflectMethod method
     let action = subapi `addMethodCheck` methodCheck method request
                         `addAcceptCheck` acceptCheck contentTypeProxy accept
         accept = fromMaybe ct_wildcard $ lookup hAccept $ requestHeaders request
-    in runAction action env request respond streamIt
+    in bracket createInternalState
+               closeInternalState
+               (runAction action env request respond . streamResponse)
     where
-
       method :: Method
       method = reflectMethod (Proxy :: Proxy method)
 
       contentTypeProxy :: Proxy contentTypes
       contentTypeProxy = Proxy
 
-      streamIt :: Stream (Of BS.ByteString) (ResourceT IO) () -> RouteResult Response
-      streamIt stream = Route $ streamingResponse (hoist runResourceT stream) status []
+      streamResponse :: InternalState -> Stream (Of BS.ByteString) (ResourceT IO) () -> RouteResult Response
+      streamResponse st stream = Route $ streamingResponse (hoist (`runInternalState` st) stream) status []
 
       status :: Status
       status = toEnum $ fromInteger $ natVal (Proxy :: Proxy status)
