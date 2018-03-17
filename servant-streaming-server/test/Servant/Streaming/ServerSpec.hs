@@ -6,10 +6,12 @@ import           Control.Concurrent
 import           Control.Monad.Trans.Resource (ResourceT, getInternalState,
                                                runInternalState, runResourceT)
 import           Data.ByteString              (ByteString)
+import qualified Data.ByteString.Streaming    as BSS
 import qualified Data.ByteString              as BS
 import qualified Data.ByteString.Lazy         as BSL
+
 import           Data.IORef
-import           Data.String                  (fromString)
+import           Data.String                  (fromString, IsString)
 import           GHC.Stats
 import qualified Network.HTTP.Media           as M
 import           Network.HTTP.Types           (status200, status405, status406,
@@ -95,6 +97,14 @@ streamResponseSpec = describe "StreamResponse instance" $ around withServer $ do
         req = req' { requestHeaders = ("Accept", "bla/bla"):requestHeaders req' }
     responseStatus <$> makeRequest req `shouldReturn` status406
 
+  it "handles resource deallocation correctly" $ \port' -> do
+    let req' = streamReq port' "getfile" (S.each []) -- TODO: simplify
+        contents :: IsString a => a
+        contents = "foobar"
+    BS.writeFile "hello.txt" contents -- TODO: temporary file
+    responseBody <$> makeRequest req'
+        `shouldReturn` fromString contents
+
 ------------------------------------------------------------------------------
 -- API
 
@@ -102,12 +112,13 @@ type API
   =    "length" :> StreamBody '[JSON] :> Post '[PlainText] Int
   :<|> "contentType" :> StreamBody '[JSON, PlainText] :> Post '[PlainText] M.MediaType
   :<|> "echo" :> StreamBody '[JSON] :> StreamResponsePost '[JSON]
+  :<|> "getfile" :> StreamResponsePost '[PlainText]
 
 api :: Proxy API
 api = Proxy
 
 server :: Server API
-server = lengthH :<|> contentTypeH :<|> echoH
+server = lengthH :<|> contentTypeH :<|> echoH :<|> getfileH
   where
     lengthH      (_contentType, stream')
       = liftIO . runResourceT $ S.sum_ $ S.subst (\x -> BS.length x :> ()) stream'
@@ -115,6 +126,7 @@ server = lengthH :<|> contentTypeH :<|> echoH
       = return contentType
     echoH        (_contentType, stream')
       = return stream'
+    getfileH = return $ BSS.toChunks (BSS.readFile "hello.txt")
 
 withServer :: (Port -> IO ()) -> IO ()
 withServer = withApplicationSettings settings (return $ serve api server)
