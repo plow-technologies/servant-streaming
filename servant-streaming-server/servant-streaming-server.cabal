@@ -33,7 +33,7 @@ library
     , bytestring
     , http-media >=0.6 && <0.8
     , http-types >=0.9 && <0.13
-    , resourcet >=1.1 && <1.2
+    , resourcet >=1.1 && <1.3
     , servant
     , servant-server >=0.8 && <0.14
     , servant-streaming <0.2
@@ -61,7 +61,7 @@ test-suite spec
     , http-types >=0.9 && <0.13
     , pipes >=4 && <5
     , pipes-http >=1 && <2
-    , resourcet >=1.1 && <1.2
+    , resourcet >=1.1 && <1.3
     , servant
     , servant-server >=0.8 && <0.14
     , servant-streaming <0.2
