@@ -15,9 +15,9 @@ import           Servant.Streaming
 import           Streaming
 import qualified Streaming.Prelude            as S
 
-instance (HasClient m subapi, RunClient m )
-    => HasClient m (StreamBody contentTypes :> subapi) where
-  type Client m (StreamBody contentTypes :> subapi)
+instance (HasClient m subapi, RunClient m)
+    => HasClient m (StreamBodyMonad contentTypes n :> subapi) where
+  type Client m (StreamBodyMonad contentTypes n :> subapi)
     = (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ())
       -> Client m subapi
   clientWithRoute pm _ req (mtype, body)

@@ -37,10 +37,10 @@ import           Servant.Server.Internal.RoutingApplication (DelayedIO,
 import           Servant.Streaming
 import           Streaming
 
-instance ( AllMime contentTypes, HasServer subapi ctx
-         ) => HasServer (StreamBody contentTypes :> subapi) ctx where
-  type ServerT (StreamBody contentTypes :> subapi) m
-    = (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ())
+instance ( AllMime contentTypes, HasServer subapi ctx, MonadIO n
+         ) => HasServer (StreamBodyMonad contentTypes n :> subapi) ctx where
+  type ServerT (StreamBodyMonad contentTypes n :> subapi) m
+    = (M.MediaType, Stream (Of BS.ByteString) (ResourceT n) ())
       -> ServerT subapi m
 
   route _ ctxt subapi =
