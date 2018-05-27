@@ -69,13 +69,13 @@ withServer = testWithApplicationSettings settings (return $ serve api server)
 lengthC
   :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ())
   -> ClientM Int
-contentTypeC
+_contentTypeC
   :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ())
   -> ClientM M.MediaType
-echoC
+_echoC
   :: (M.MediaType, Stream (Of BS.ByteString) (ResourceT IO) ())
   -> ClientM (Stream (Of BS.ByteString) (ResourceT IO) ())
-lengthC :<|> contentTypeC :<|> echoC
+lengthC :<|> _contentTypeC :<|> _echoC
   = client api
 
 ------------------------------------------------------------------------------

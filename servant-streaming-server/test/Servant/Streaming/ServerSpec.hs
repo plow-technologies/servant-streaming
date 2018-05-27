@@ -3,6 +3,7 @@
 module Servant.Streaming.ServerSpec (spec) where
 
 import           Control.Concurrent
+import           Control.Exception            (bracket)
 import           Control.Monad.Trans.Resource (ResourceT, getInternalState,
                                                runInternalState, runResourceT)
 import           Data.ByteString              (ByteString)
@@ -33,6 +34,7 @@ import           Servant                      ((:<|>) ((:<|>)), (:>), JSON,
 import           Servant.Streaming.Server
 import           Streaming
 import qualified Streaming.Prelude            as S
+import           System.Directory             (removeFile)
 import           Test.Hspec
 
 
@@ -55,7 +57,7 @@ streamBodySpec = describe "StreamBody instance" $ around withServer $ do
     responseBody <$> makeRequest req
       `shouldReturn` fromString (show (1000 * megabyte :: Int))
     bytes <- max_live_bytes <$> getRTSStats
-    bytes < 100 * megabyte `shouldBe` True
+    bytes < 200 * megabyte `shouldBe` True
 
   it "passes as argument the content-type" $ \port' -> do
     let req = streamReq port' "contentType" (S.each ["h","i"])
@@ -81,7 +83,7 @@ streamResponseSpec = describe "StreamResponse instance" $ around withServer $ do
             $ BS.replicate megabyte 97 -- 100 MB total
     _ <- makeRequestStreamResponse req (runResourceT . S.length)
     bytes <- max_live_bytes <$> getRTSStats
-    bytes < 100 * megabyte `shouldBe` True
+    bytes < 200 * megabyte `shouldBe` True
 
   it "sets the specified status code" $ \port' -> do
     let req = streamReq port' "length" (S.each ["h","i"])
@@ -101,9 +103,12 @@ streamResponseSpec = describe "StreamResponse instance" $ around withServer $ do
     let req' = streamReq port' "getfile" (S.each []) -- TODO: simplify
         contents :: IsString a => a
         contents = "foobar"
-    BS.writeFile "hello.txt" contents -- TODO: temporary file
-    responseBody <$> makeRequest req'
-        `shouldReturn` fromString contents
+    x <- bracket
+      (BS.writeFile "hello.txt" contents)
+      (\_ -> removeFile "hello.txt")
+      (\_ -> responseBody <$> makeRequest req')
+    x `shouldBe` fromString contents
+
 
 ------------------------------------------------------------------------------
 -- API

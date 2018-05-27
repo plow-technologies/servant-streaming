@@ -4,7 +4,6 @@ module Servant.Streaming.Server.Internal where
 import           Control.Exception                          (bracket)
 import           Control.Monad.IO.Class
 import           Control.Monad.Trans.Resource               (ResourceT,
-                                                             runResourceT,
                                                              InternalState,
                                                              createInternalState,
                                                              closeInternalState,

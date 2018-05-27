@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-
+{-# LANGUAGE CPP #-}
 module Servant.Streaming.Client.Internal where
 
 import           Control.Monad
@@ -40,12 +40,16 @@ instance (HasClient m subapi, RunClient m)
                   | BS.null bs -> writeIORef ref str >> popper
                   | otherwise -> writeIORef ref str >> return bs
         liftIO $ write popper
+#if MIN_VERSION_servant_client_core(0,13,0)
+  hoistClientMonad pm _ f cl = \a ->
+    hoistClientMonad pm (Proxy :: Proxy subapi) f (cl a)
+#endif
 
 instance (RunClient m )
     => HasClient m (StreamResponse verb status contentTypes) where
   type Client m (StreamResponse verb status contentTypes)
     = m (Stream (Of BS.ByteString) (ResourceT IO) ())
-  clientWithRoute pm _ req = do
+  clientWithRoute _ _ req = do
     respStream <- runStreamingResponse <$> streamingRequest req
     let stream' = respStream responseBody
     return $ toStream stream'
@@ -57,3 +61,6 @@ instance (RunClient m )
         unless (BS.null bs) $ do
           S.yield bs
           toStream read'
+#if MIN_VERSION_servant_client_core(0,13,0)
+  hoistClientMonad _m _ f cl = f cl
+#endif

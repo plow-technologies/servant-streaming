@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 19683e47e519571db4afa205724dd658346d472a615df1661a37e0a5ef19d7dc
+-- hash: 6e1056729e0a1c2039fd19e3e873a89088bb521e63fd389d8e9836b5415c4239
 
 name:           servant-streaming-client
 version:        0.1.0.0
@@ -34,8 +34,8 @@ library
     , http-media >=0.6 && <0.8
     , http-types >=0.9 && <0.13
     , resourcet >=1.1 && <1.3
-    , servant >=0.10 && <0.14
-    , servant-client-core >=0.10 && <0.14
+    , servant >=0.10 && <0.15
+    , servant-client-core >=0.10 && <0.15
     , servant-streaming <0.2
     , streaming >=0.1 && <0.3
   exposed-modules:
@@ -59,9 +59,9 @@ test-suite spec
     , http-media >=0.6 && <0.8
     , http-types >=0.9 && <0.13
     , resourcet >=1.1 && <1.3
-    , servant >=0.10 && <0.14
+    , servant >=0.10 && <0.15
     , servant-client
-    , servant-client-core >=0.10 && <0.14
+    , servant-client-core >=0.10 && <0.15
     , servant-server
     , servant-streaming <0.2
     , servant-streaming-client

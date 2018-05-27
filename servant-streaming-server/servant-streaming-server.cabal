@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3ddc44f811cb73137cf216ac99778ea5f8d85a55bb7e24012420dfe6862ebea9
+-- hash: 9ee5f406ccd0f5e87455c7aac9643fe14db160c9f4b5f78de4b68942412ba0ba
 
 name:           servant-streaming-server
 version:        0.1.0.0
@@ -56,6 +56,7 @@ test-suite spec
       QuickCheck >=2.8 && <2.11
     , base >=4.7 && <4.11
     , bytestring
+    , directory
     , hspec >2 && <3
     , http-media >=0.6 && <0.8
     , http-types >=0.9 && <0.13

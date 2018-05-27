@@ -66,3 +66,4 @@ tests:
       - pipes-http >= 1 && < 2
       - streaming-bytestring >= 0.1 && < 0.2
       - warp >= 3.2.4 && < 3.3
+      - directory
