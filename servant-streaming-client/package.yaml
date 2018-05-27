@@ -1,5 +1,5 @@
 name:                servant-streaming-client
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            Client instances for the 'servant-streaming' package.
 description:         >
     This package defines instances that allow using the 'StreamBody' and
@@ -20,7 +20,7 @@ dependencies:
   - http-types >= 0.9 && < 0.13
   - http-media >= 0.6 && < 0.8
   - servant >= 0.10 && < 0.15
-  - servant-streaming < 0.2
+  - servant-streaming >= 0.2 && < 0.3
   - bytestring
   - servant-client-core >= 0.10 && < 0.15
   - resourcet >= 1.1 && < 1.3

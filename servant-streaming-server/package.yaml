@@ -1,5 +1,5 @@
 name:                servant-streaming-server
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            Server instances for the 'servant-streaming' package.
 description:         >
     This package defines instances that allow using the 'StreamBody' and
@@ -21,7 +21,7 @@ dependencies:
   - resourcet >= 1.1 && < 1.3
   - servant
   - servant-server >= 0.8 && < 0.14
-  - servant-streaming < 0.2
+  - servant-streaming >= 0.2 && < 0.3
   - streaming >= 0.1 && < 0.3
   - streaming-wai >= 0.1 && < 0.2
   - wai >= 3.0 && < 3.3

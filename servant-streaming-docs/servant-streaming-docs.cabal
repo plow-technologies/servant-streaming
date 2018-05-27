@@ -2,10 +2,10 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 23fdf0589ae452fc911abfb7854f7dac188a76418c285103e6247a6ff89076f5
+-- hash: 74804cef0ef3a3470dcfa0dff03660fc820fa165a1c0bd780a0fdbad7f5eefcd
 
 name:           servant-streaming-docs
-version:        0.1.0.0
+version:        0.2.0.0
 synopsis:       Client instances for the 'servant-docs' package.
 description:    This package defines instances that allow using the 'StreamBody' and 'StreamResponse' combinators in combination with 'servant-docs'
 homepage:       http://github.com/plow-technologies/servant-streaming#readme
@@ -33,7 +33,7 @@ library
     , lens
     , servant >=0.10 && <0.14
     , servant-docs >=0.10 && <0.14
-    , servant-streaming <0.2
+    , servant-streaming >=0.2 && <0.3
   exposed-modules:
       Servant.Streaming.Docs
       Servant.Streaming.Docs.Internal

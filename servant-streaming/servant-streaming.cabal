@@ -2,10 +2,10 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d3eccaebab95cbf01d57ac0fccb617d103b8c08a4e2426fced89352c574e670b
+-- hash: 74ed850a5125af30d91d2e9b3c6a8b357a3a093de9f73f39f7a126043b33983c
 
 name:           servant-streaming
-version:        0.1.0.0
+version:        0.2.0.0
 synopsis:       Servant combinators for the 'streaming' package
 description:    This package defines the 'StreamBody' and 'StreamResponse' combinators for use with the <https://hackage.haskell.org/package/streaming streaming> package.
 homepage:       http://github.com/plow-technologies/servant-streaming#readme
