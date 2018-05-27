@@ -4,7 +4,10 @@ import GHC.TypeLits (Nat)
 import Network.HTTP.Types
 
 -- | A request body that should be streamed.
-data StreamBody (contentTypes :: [*])
+type StreamBody ct = StreamBodyMonad ct IO
+
+-- | A request body that should be streamed with specified server monad
+data StreamBodyMonad (contentTypes :: [*]) (m :: * -> *)
 
 -- | A response body that should be streamed, with specified method, status,
 -- and content-type.

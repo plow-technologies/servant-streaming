@@ -23,7 +23,7 @@ dependencies:
   - servant-streaming < 0.2
   - bytestring
   - servant-client-core >= 0.10 && < 0.14
-  - resourcet >= 1.1 && < 1.2
+  - resourcet >= 1.1 && < 1.3
   - streaming >= 0.1 && < 0.3
 
 

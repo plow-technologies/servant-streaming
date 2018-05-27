@@ -8,7 +8,7 @@ extra-deps:
 - streaming-wai-0.1.1
 - pipes-http-1.0.5
 - git: https://github.com/haskell-servant/servant
-  commit: e3158d70168ab0087c867e9f9761d2aff2b01182
+  commit: 0c66b9c0559721ea682cd0d1fa35f403ec075cda
   subdirs:
     - servant-server
     - servant
