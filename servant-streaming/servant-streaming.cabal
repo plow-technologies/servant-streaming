@@ -1,8 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.20.0.
+-- This file has been generated from package.yaml by hpack version 0.21.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 74ed850a5125af30d91d2e9b3c6a8b357a3a093de9f73f39f7a126043b33983c
+-- hash: 870d8d0449c8cea78cbcdca612c870d784cbfbd433b2b5ce14884d665bb01d53
 
 name:           servant-streaming
 version:        0.2.0.0
@@ -24,32 +24,32 @@ source-repository head
   location: https://github.com/plow-technologies/servant-streaming
 
 library
+  exposed-modules:
+      Servant.Streaming
   hs-source-dirs:
       src
   default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes RecordWildCards ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall
   build-depends:
-      base >=4.7 && <4.11
+      base >=4.7 && <4.12
     , http-types >=0.9 && <0.13
-    , servant >=0.8 && <0.14
-  exposed-modules:
-      Servant.Streaming
+    , servant >=0.13 && <0.15
   default-language: Haskell2010
 
 test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
+  other-modules:
+      Paths_servant_streaming
   hs-source-dirs:
       test
   default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes RecordWildCards ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall
   build-depends:
-      QuickCheck >=2.8 && <2.11
-    , base >=4.7 && <4.11
+      QuickCheck >=2.8 && <2.12
+    , base >=4.7 && <4.12
     , hspec >2 && <3
     , http-types >=0.9 && <0.13
-    , servant >=0.8 && <0.14
+    , servant >=0.13 && <0.15
     , servant-streaming
-  other-modules:
-      Paths_servant_streaming
   default-language: Haskell2010
