@@ -16,10 +16,10 @@ tested-with:         GHC == 8.2.2
 ghc-options: -Wall
 
 dependencies:
-  - base >= 4.7 && < 4.11
-  - servant >= 0.10 && < 0.14
+  - base >= 4.7 && < 4.12
+  - servant >= 0.13 && < 0.15
   - servant-streaming >= 0.2 && < 0.3
-  - servant-docs >= 0.10 && < 0.14
+  - servant-docs >= 0.11 && < 0.15
   - lens
 
 
