@@ -1,11 +1,11 @@
--- This file has been generated from package.yaml by hpack version 0.21.2.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 870d8d0449c8cea78cbcdca612c870d784cbfbd433b2b5ce14884d665bb01d53
+-- hash: 0b39e59b86acd9bbc71b8a79a0a1de13e600c72e30cbc558eedcdbc9ad90d7e8
 
 name:           servant-streaming
-version:        0.2.0.0
+version:        0.3.0.0
 synopsis:       Servant combinators for the 'streaming' package
 description:    This package defines the 'StreamBody' and 'StreamResponse' combinators for use with the <https://hackage.haskell.org/package/streaming streaming> package.
 homepage:       http://github.com/plow-technologies/servant-streaming#readme

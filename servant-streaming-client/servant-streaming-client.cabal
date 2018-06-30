@@ -1,11 +1,11 @@
--- This file has been generated from package.yaml by hpack version 0.21.2.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 295159dacfdfa1d79894fdc67a2e46f866c5bb239175b9befa01e702149d85ed
+-- hash: 21bfb53911dc0317543a3fe59a54db4f17c7e6944702c794dc421b33857b3d13
 
 name:           servant-streaming-client
-version:        0.2.0.0
+version:        0.3.0.0
 synopsis:       Client instances for the 'servant-streaming' package.
 description:    This package defines instances that allow using the 'StreamBody' and 'StreamResponse' combinators in 'servant' clients.
 homepage:       http://github.com/plow-technologies/servant-streaming#readme
@@ -39,7 +39,7 @@ library
     , resourcet >=1.1 && <1.3
     , servant >=0.14 && <0.15
     , servant-client-core >=0.14 && <0.15
-    , servant-streaming >=0.2 && <0.3
+    , servant-streaming >=0.3 && <0.4
     , streaming >=0.1 && <0.3
   default-language: Haskell2010
 
@@ -66,7 +66,7 @@ test-suite spec
     , servant-client
     , servant-client-core >=0.14 && <0.15
     , servant-server
-    , servant-streaming >=0.2 && <0.3
+    , servant-streaming >=0.3 && <0.4
     , servant-streaming-client
     , servant-streaming-server
     , streaming >=0.1 && <0.3
