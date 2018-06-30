@@ -1,5 +1,5 @@
 name:                servant-streaming
-version:             0.2.0.0
+version:             0.3.0.0
 synopsis:            Servant combinators for the 'streaming' package
 description:         >
     This package defines the 'StreamBody' and 'StreamResponse' combinators for
