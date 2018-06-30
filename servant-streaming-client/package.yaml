@@ -20,7 +20,7 @@ dependencies:
   - http-types >= 0.9 && < 0.13
   - http-media >= 0.6 && < 0.8
   - servant >= 0.14 && < 0.15
-  - servant-streaming >= 0.2 && < 0.3
+  - servant-streaming >= 0.2 && < 0.4
   - bytestring
   - servant-client-core >= 0.14 && < 0.15
   - resourcet >= 1.1 && < 1.3
