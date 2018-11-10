@@ -1,8 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.21.2.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2533632366b64a718c51499be835f9d83b07cc35322bdd57197e9d49454d8db0
+-- hash: b9cdda003dd5e09ffc108402b5b2d50d977fc2c7d8a559a3c188c168411922b1
 
 name:           servant-streaming-docs
 version:        0.3.0.0
@@ -32,7 +32,7 @@ library
   default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes RecordWildCards ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall
   build-depends:
-      base >=4.7 && <4.12
+      base >=4.7 && <4.13
     , lens
     , servant >=0.13 && <0.15
     , servant-docs >=0.11 && <0.15

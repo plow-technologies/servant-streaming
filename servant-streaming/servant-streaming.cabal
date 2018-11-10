@@ -1,8 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.21.2.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0b39e59b86acd9bbc71b8a79a0a1de13e600c72e30cbc558eedcdbc9ad90d7e8
+-- hash: 4fffe1a0311678f8d18c411b780b9b538d52b8b810680ff09aa0a152aaffaf91
 
 name:           servant-streaming
 version:        0.3.0.0
@@ -31,7 +31,7 @@ library
   default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes RecordWildCards ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall
   build-depends:
-      base >=4.7 && <4.12
+      base >=4.7 && <4.13
     , http-types >=0.9 && <0.13
     , servant >=0.13 && <0.15
   default-language: Haskell2010
@@ -47,7 +47,7 @@ test-suite spec
   ghc-options: -Wall
   build-depends:
       QuickCheck >=2.8 && <2.12
-    , base >=4.7 && <4.12
+    , base >=4.7 && <4.13
     , hspec >2 && <3
     , http-types >=0.9 && <0.13
     , servant >=0.13 && <0.15

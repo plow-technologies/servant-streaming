@@ -1,11 +1,8 @@
-resolver: nightly-2018-06-29
+resolver: nightly-2018-11-10
 packages:
 - servant-streaming/
 - servant-streaming-server/
 - servant-streaming-client/
 - servant-streaming-docs/
 extra-deps:
-- servant-server-0.14
-- servant-0.14
-- servant-client-core-0.14
-- servant-client-0.14
+- pipes-http-1.0.5
