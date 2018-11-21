@@ -1,8 +1,18 @@
-resolver: nightly-2018-11-10
+resolver: nightly-2018-11-21
 packages:
 - servant-streaming/
 - servant-streaming-server/
 - servant-streaming-client/
 - servant-streaming-docs/
 extra-deps:
-- pipes-http-1.0.5
+- servant-0.15
+- servant-server-0.15
+- servant-client-0.15
+- servant-client-core-0.15
+- QuickCheck-2.12.6.1
+- generics-sop-0.4.0.1
+- http-api-data-0.4
+- hspec-core-2.6.0
+- hspec-2.6.0
+- hspec-discover-2.6.0
+- servant-docs-0.11.3

@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4fffe1a0311678f8d18c411b780b9b538d52b8b810680ff09aa0a152aaffaf91
+-- hash: e9a39c63f5e91dcbd2fecc1fd7425e0ad47e394bbdb7e8393415ca80538ee4e4
 
 name:           servant-streaming
 version:        0.3.0.0
@@ -33,7 +33,7 @@ library
   build-depends:
       base >=4.7 && <4.13
     , http-types >=0.9 && <0.13
-    , servant >=0.13 && <0.15
+    , servant >=0.13 && <0.16
   default-language: Haskell2010
 
 test-suite spec
@@ -46,10 +46,10 @@ test-suite spec
   default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes RecordWildCards ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall
   build-depends:
-      QuickCheck >=2.8 && <2.12
+      QuickCheck >=2.8 && <2.13
     , base >=4.7 && <4.13
     , hspec >2 && <3
     , http-types >=0.9 && <0.13
-    , servant >=0.13 && <0.15
+    , servant >=0.13 && <0.16
     , servant-streaming
   default-language: Haskell2010

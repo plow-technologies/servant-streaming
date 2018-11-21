@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b9cdda003dd5e09ffc108402b5b2d50d977fc2c7d8a559a3c188c168411922b1
+-- hash: 156a633d1d7cf993ca7095d89dff63fd0b9a4a3749d97202712b3b2f0e021131
 
 name:           servant-streaming-docs
 version:        0.3.0.0
@@ -34,7 +34,7 @@ library
   build-depends:
       base >=4.7 && <4.13
     , lens
-    , servant >=0.13 && <0.15
+    , servant >=0.13 && <0.16
     , servant-docs >=0.11 && <0.15
     , servant-streaming >=0.2 && <0.4
   default-language: Haskell2010

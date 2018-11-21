@@ -4,7 +4,7 @@ module Servant.Streaming.Docs.Internal where
 
 import           Control.Lens
 import           Data.Proxy               (Proxy (Proxy))
-import           Servant.API              hiding (Stream)
+import           Servant.API              hiding (Stream, StreamBody)
 import           Servant.API.ContentTypes (allMime, AllMime)
 import           GHC.TypeLits
 import           Servant.Docs

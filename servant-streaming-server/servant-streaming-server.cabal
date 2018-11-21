@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2aa8d9c63e7d52568b9fb551cba5c59bef014b82abb09aa00c0387143a1dc11a
+-- hash: 8cd6a0025522cf2d83b77b3fbbb219dcfdc4fc1a69ffcd0d26886c472b0b5fee
 
 name:           servant-streaming-server
 version:        0.3.0.0
@@ -38,7 +38,7 @@ library
     , http-types >=0.9 && <0.13
     , resourcet >=1.1 && <1.3
     , servant
-    , servant-server >=0.13 && <0.15
+    , servant-server >=0.13 && <0.16
     , servant-streaming >=0.2 && <0.4
     , streaming >=0.1 && <0.3
     , streaming-wai >=0.1 && <0.2
@@ -56,7 +56,7 @@ test-suite spec
   default-extensions: AutoDeriveTypeable ConstraintKinds DataKinds DefaultSignatures DeriveFoldable DeriveFunctor DeriveGeneric DeriveTraversable FlexibleContexts FlexibleInstances FunctionalDependencies GADTs KindSignatures MultiParamTypeClasses OverloadedStrings RankNTypes ScopedTypeVariables TypeFamilies TypeOperators
   ghc-options: -Wall -Wall -with-rtsopts=-T -threaded
   build-depends:
-      QuickCheck >=2.8 && <2.12
+      QuickCheck >=2.8 && <2.13
     , base >=4.7 && <4.13
     , bytestring
     , directory
@@ -67,7 +67,7 @@ test-suite spec
     , pipes-http >=1 && <2
     , resourcet >=1.1 && <1.3
     , servant
-    , servant-server >=0.13 && <0.15
+    , servant-server >=0.13 && <0.16
     , servant-streaming >=0.2 && <0.4
     , servant-streaming-server
     , streaming >=0.1 && <0.3
